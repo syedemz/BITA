@@ -36,10 +36,10 @@ class stockImporter:
         try:
             create_table_query = f"""
                 CREATE TABLE IF NOT EXISTS {self.schema}.{self.tablename} (
-                    PointOfSale VARCHAR(255),
-                    Product VARCHAR(255),
-                    Date VARCHAR(255),
-                    Stock VARCHAR(255)
+                    pointofsale VARCHAR(255),
+                    product VARCHAR(255),
+                    date VARCHAR(255),
+                    stock VARCHAR(255)
                 );
             """
             # Execute the query
@@ -65,7 +65,11 @@ class stockImporter:
                 self.cursor.execute(f"DELETE FROM {self.schema}.{self.tablename}")
                 print("old data removed from table")
                 print("starting new data import ........")
+
+                # please change the last arguement of bulk_import method to pgloader if you do not want to use sql alchemy
+                
                 bulk_import(self.host, self.port, self.dbname, self.user, self.password, self.schema, self.tablename, 'alchemy')
+                #bulk_import(self.host, self.port, self.dbname, self.user, self.password, self.schema, self.tablename, 'pgloader')
                 print("import in progress ......... ")
                 set_import_date()
 
@@ -76,7 +80,11 @@ class stockImporter:
            
         else:
             print("starting new data import ........")
+
+            # please change the last arguement of buli_import method to pgloader if you do not want to use sql alchemy
+
             bulk_import(self.host, self.port, self.dbname, self.user, self.password, self.schema, self.tablename, 'alchemy')
+            #bulk_import(self.host, self.port, self.dbname, self.user, self.password, self.schema, self.tablename, 'pgloader')
             print("import in progress ......... ")
             set_import_date()
       

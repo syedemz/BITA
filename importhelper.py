@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from sqlalchemy import create_engine
 
-def csvReader():
+def getColumnNames():
     schema = []
     with open('Stock.CSV', 'r', encoding='utf-8-sig') as file:
         # Using DictReader to infer column types
@@ -15,12 +15,15 @@ def csvReader():
             print("Column Names and Types:")
             # Reading only the first row
             first_row = next(reader)
-
+            
             for column_name, value in first_row.items():
+                schema.append(column_name.lower())
+
+            """ for column_name, value in first_row.items():
                 # Inferring data type based on the value
                 data_type = infer_data_type(value)
                 print(f"{column_name}: {data_type}")
-                schema.append([str(column_name), data_type])
+                schema.append([str(column_name), data_type]) """
 
             return schema
         else:
@@ -44,15 +47,18 @@ def bulk_import_alchemy(user, password, database, schema, tablename):
 
     try:
         # Load CSV into a Pandas DataFrame
-        df = pd.read_csv("Stock.CSV")
+
+        df = pd.read_csv("Stock.CSV", delimiter=";")
+        df.columns = df.columns.str.lower()
+        print(df.head(5))
 
 
         connection_string = f"postgresql://{user}:{password}@localhost:5432/{database}"
         engine = create_engine(connection_string)
         table_name = f"{schema}.{tablename}"
 
-        # Write DataFrame to PostgreSQL
-        df.to_sql(table_name, engine, if_exists='append', index=False)
+        
+        df.to_sql(tablename, schema=schema, con=engine, if_exists='append', index=False)
 
         print(f"Data successfully uploaded to table {table_name}.")
     except Exception as e:
