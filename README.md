@@ -7,7 +7,7 @@ A postgre SQL server running on localhost and port 5432 which is default
 
 A user by the name of "stockbroker" and password "stock"
 
-A database by the name of "stocks" with all the privileges to this schema granted to the stockbroker user
+A database by the name of "stocks" with all the privileges to this database granted to the stockbroker user
 
 A schema by the name of "stocks" with all the privileges to this schema granted to the stockbroker user
 
