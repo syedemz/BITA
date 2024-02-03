@@ -1,0 +1,20 @@
+LOAD CSV
+  FROM 'Stock.CSV' WITH ENCODING utf-8
+    HAVING FIELDS
+    (
+      pointofsale, product, date, stock
+    )
+  INTO postgresql://stockbroker:stock@localhost:5432/stocks
+    TARGET TABLE stocks.currentstocks
+    TARGET COLUMNS
+    (
+      pointofsale,
+      product,
+      date,
+      stock
+    )
+  WITH truncate,
+    skip header = 1,
+    fields terminated by ';'
+
+  SET work_mem to '200 MB', maintenance_work_mem to '64 MB';
